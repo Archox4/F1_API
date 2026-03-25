@@ -35,7 +35,7 @@ public class Driver {
     @Column(name = "full_name", nullable = false, length = 50)
     private String fullName;
 
-    @Column(name = "headshot_url", nullable = false)
+    @Column(name = "headshot_url", nullable = true)
     private String headshotUrl;
 
     @Column(name = "name_acronym", nullable = false, length = 4)

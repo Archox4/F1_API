@@ -5,6 +5,7 @@ import com.example.spring1.entities.Session;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import tools.jackson.databind.JsonNode;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class SessionResultDTO {
     private Short driverNumber;
 
     @JsonProperty("duration")
-    private List<Double> duration;
+    private JsonNode duration;
 
     @JsonProperty("number_of_laps")
     private Short numberOfLaps;

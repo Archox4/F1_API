@@ -48,4 +48,9 @@ public class ClientConfig {
         return createClient(builder, RaceDataClients.SessionResultClient.class);
     }
 
+    @Bean
+    public RaceDataClients.StintClient stintClient(RestClient.Builder builder) {
+        return createClient(builder, RaceDataClients.StintClient.class);
+    }
+
 }

@@ -9,4 +9,6 @@ public interface MeetingRepository extends JpaRepository<Meeting, Integer> {
     List<Meeting> findByYear(Short year);
 
     Meeting findById(Short meeting_key);
+
+    Meeting findById(Meeting meeting);
 }

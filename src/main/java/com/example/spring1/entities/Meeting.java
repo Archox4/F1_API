@@ -1,8 +1,10 @@
 package com.example.spring1.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import net.minidev.json.annotate.JsonIgnore;
 
 import java.time.OffsetDateTime;
 import java.util.LinkedHashSet;
@@ -45,6 +47,7 @@ public class Meeting {
     private Short year;
 
     @OneToMany(mappedBy = "meetingKey")
+    @JsonManagedReference
     private Set<Session> sessions = new LinkedHashSet<>();
 
 
