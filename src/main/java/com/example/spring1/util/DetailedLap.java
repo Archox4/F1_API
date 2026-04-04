@@ -1,7 +1,10 @@
 package com.example.spring1.util;
 
+import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -13,9 +16,10 @@ public class DetailedLap {
     private String fullName;
 
     private Short lapNumber;
-    private Short s1;
-    private Short s2;
-    private Short s3;
+    private Double durationSector1;
+    private Double durationSector2;
+    private Double durationSector3;
+    private Double lapDuration;
     private String isPitOutLap;
 
     private String compound;
@@ -23,8 +27,8 @@ public class DetailedLap {
 
 
     public DetailedLap(Short driverNumber, String headshotUrl, String nameAcronym,
-                        String teamColour, String fullName, Short lapNumber,
-                        Short s1, Short s2, Short s3, String isPitOutLap,
+                        String teamColour, String fullName, Short lapNumber, Double durationSector1,
+                        Double durationSector2, Double durationSector3, Double lapDuration, String isPitOutLap,
                         String compound, Short tyreAgeAtStart) {
         this.driverNumber = driverNumber;
         this.headshotUrl = headshotUrl;
@@ -32,13 +36,12 @@ public class DetailedLap {
         this.teamColour = teamColour;
         this.fullName = fullName;
         this.lapNumber = lapNumber;
-        this.s1 = s1;
-        this.s2 = s2;
-        this.s3 = s3;
+        this.durationSector1 = durationSector1;
+        this.durationSector2 = durationSector2;
+        this.durationSector3 = durationSector3;
+        this.lapDuration = Objects.requireNonNullElse(lapDuration, 0.0);
         this.isPitOutLap = isPitOutLap;
         this.compound = compound;
         this.tyreAgeAtStart = tyreAgeAtStart;
     }
-
-
 }

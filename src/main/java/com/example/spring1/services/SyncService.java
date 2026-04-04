@@ -100,16 +100,10 @@ public class SyncService {
             try {
                 log.info("syncing laps...");
                 syncLapsBySessionKey(session);
-                Thread.sleep(500);
-
                 log.info("syncing results");
                 syncResultsOfSession(session);
-                Thread.sleep(500);
-
                 log.info("syncing stints");
                 syncStintsBySession(session);
-                Thread.sleep(500);
-
                 log.info("syncing drivers");
                 syncDriversBySession(session);
                 Thread.sleep(3000);

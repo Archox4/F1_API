@@ -33,13 +33,13 @@ public class Lap {
     private Short lapNumber;
 
     @Column(name = "duration_sector_1", nullable = true)
-    private Short durationSector1;
+    private Double durationSector1;
 
     @Column(name = "duration_sector_2", nullable = true)
-    private Short durationSector2;
+    private Double durationSector2;
 
     @Column(name = "duration_sector_3", nullable = true)
-    private Short durationSector3;
+    private Double durationSector3;
 
     @Column(name = "is_pit_out_lap", nullable = false, length = 5)
     private String isPitOutLap;

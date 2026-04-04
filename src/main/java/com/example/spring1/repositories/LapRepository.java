@@ -17,7 +17,7 @@ public interface LapRepository extends JpaRepository<Lap, Integer> {
 
     @Query("SELECT new com.example.spring1.util.DetailedLap(" +
             "l.driverNumber, d.headshotUrl, d.nameAcronym, d.teamColour, d.fullName, l.lapNumber, " +
-            "l.durationSector1, l.durationSector2, l.durationSector3, l.isPitOutLap, " +
+            "l.durationSector1, l.durationSector2, l.durationSector3 ,l.lapDuration, l.isPitOutLap, " +
             "s.compound, s.tyreAgeAtStart) " +
             "FROM Lap l " +
             "JOIN Driver d ON l.driverNumber = d.driverNumber AND l.sessionKey = d.sessionKey " +

@@ -18,7 +18,11 @@ public class DetailedLapResponse {
     @Getter @Setter
     public static class LapData {
         private Short lapNumber;
-        private Short s1, s2, s3;
+        private String isPitOutLap;
+        private Double lapDuration;
+        private Double durationSector1;
+        private Double durationSector2;
+        private Double durationSector3;
         private String compound;
         private Short tyreAge;
     }

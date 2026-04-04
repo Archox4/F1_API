@@ -24,13 +24,13 @@ public class LapDTO {
     private Short lapNumber;
 
     @JsonProperty("duration_sector_1")
-    private Short durationSector1;
+    private Double durationSector1;
 
     @JsonProperty("duration_sector_2")
-    private Short durationSector2;
+    private Double durationSector2;
 
     @JsonProperty("duration_sector_3")
-    private Short durationSector3;
+    private Double durationSector3;
 
     @JsonProperty("is_pit_out_lap")
     private String isPitOutLap;

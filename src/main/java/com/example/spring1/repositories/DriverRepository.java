@@ -12,6 +12,8 @@ import java.util.Optional;
 public interface DriverRepository extends JpaRepository<Driver, Integer> {
     List<Driver> findDriverBySessionKeyAndMeetingKey(Session session, Meeting meeting);
 
+    List<Driver> findDriverBySessionKeyId(Short sessionKeyId);
+
     Optional<Driver> findBySessionKeyAndDriverNumber(Session sessionKey, Short driverNumber);
 
     List<TableProjections.DriverProjection> findDriversBySessionKeyId(Short sessionKey);
