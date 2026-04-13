@@ -21,11 +21,6 @@ public class SessionService {
 
     private final SessionRepository sessionRepository;
 
-    @GetMapping("/{race_key}")
-    public Session getSessionByRaceKey(@PathVariable int race_key){
-        return  sessionRepository.findById(race_key).orElseThrow(() -> new RuntimeException("Session not found with key: " + race_key));
-    }
-
     @GetMapping("/detailed/{session_key}")
     public ResponseEntity<?> getRaceDataBySessionKey(@PathVariable short session_key){
         Optional<DetailedSession> sessionData = sessionRepository.findMeetingIdForSession(session_key);
@@ -35,8 +30,4 @@ public class SessionService {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "no data for session"));
     }
 
-//    @GetMapping("/{race_id}")
-//    public List<Session> getSessionsByRaceId(@PathVariable int race_id){
-//        return  sessionRepository.findByRaceId(race_id);
-//    }
 }
