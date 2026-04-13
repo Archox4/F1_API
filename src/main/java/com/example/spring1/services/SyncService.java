@@ -7,11 +7,9 @@ import com.example.spring1.util.*;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.web.client.HttpClientErrorException;
 import tools.jackson.databind.JsonNode;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -65,26 +63,26 @@ public class SyncService {
     // FULL/PART SYNC
     //***************
 
-    @Transactional
-    public void saveDataForMeeting(short meeting_key){
-        try {
-            Meeting meeting = meetingRepository.findById(meeting_key);
-            syncSessionsOfMeeting(meeting);
-            List<Session> sessions = sessionRepository.findByMeetingKey(meeting);
-            System.out.println("size: " + sessions.size());
-            saveDataForSessions(sessions);
-        } catch (Exception e) {
-            log.error("e: ", e);
-            throw new RuntimeException(e);
-        }
-    }
+//    @Transactional
+//    public void saveDataForMeeting(short meeting_key){
+//        try {
+//            Meeting meeting = meetingRepository.findById(meeting_key);
+//            syncSessionsOfMeeting(meeting);
+//            List<Session> sessions = sessionRepository.findByMeetingKey(meeting);
+//            System.out.println("size: " + sessions.size());
+//            saveDataForSessions(sessions);
+//        } catch (Exception e) {
+//            log.error("e: ", e);
+//            throw new RuntimeException(e);
+//        }
+//    }
 
-    @Transactional
-    public void saveDataForSessions(List<Session> sessions) {
-        for (Session session : sessions){
-            syncFullSessionData(session);
-        }
-    }
+//    @Transactional
+//    public void saveDataForSessions(List<Session> sessions) {
+//        for (Session session : sessions){
+//            syncFullSessionData(session);
+//        }
+//    }
 
     @Transactional
     public void syncFullSessionData(Session session){
@@ -170,12 +168,12 @@ public class SyncService {
     // LAPS
     //***************
 
-    @Transactional
-    public void syncLapsByMeeting(short meeting_key){
-        Meeting meeting = meetingRepository.findById(meeting_key);
-        if (meeting == null) return;
-        saveLapsOfMeeting(meeting);
-    }
+//    @Transactional
+//    public void syncLapsByMeeting(short meeting_key){
+//        Meeting meeting = meetingRepository.findById(meeting_key);
+//        if (meeting == null) return;
+//        saveLapsOfMeeting(meeting);
+//    }
     // saves laps to db based on session key
     private void syncLapsBySessionKey(Session session){
         //List<LapDTO> lapDTOS = lapClient.getLapsByMeetingKey(meeting.getId().intValue());
@@ -195,20 +193,20 @@ public class SyncService {
             System.out.println("Synced " + i + " laps.");
         }
     }
-    private void saveLapsOfMeeting(Meeting meeting){
-        List<Session> sessions = sessionRepository.findByMeetingKey(meeting);
-        try {
-            for (Session session : sessions){
-                syncLapsBySessionKey(session);
-                Thread.sleep(4000);
-                System.out.println("Synced laps for session key " + session.getId());
-            }
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e){
-            System.err.println("Syncing laps error: " + e);
-        }
-    }
+//    private void saveLapsOfMeeting(Meeting meeting){
+//        List<Session> sessions = sessionRepository.findByMeetingKey(meeting);
+//        try {
+//            for (Session session : sessions){
+//                syncLapsBySessionKey(session);
+//                Thread.sleep(4000);
+//                System.out.println("Synced laps for session key " + session.getId());
+//            }
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        } catch (Exception e){
+//            System.err.println("Syncing laps error: " + e);
+//        }
+//    }
 
     //***************
     // MEETINGS
@@ -218,7 +216,8 @@ public class SyncService {
     public List<Meeting> getMeetings(int year){
         List<MeetingDTO> meetingDtos = meetingClient.getMeetings(year);
         List<Meeting> meetings = meetingDtos.stream()
-                .filter(dto -> !dto.getMeetingName().equalsIgnoreCase("Pre-Season Testing"))
+                .filter(dto -> !dto.getMeetingName().equalsIgnoreCase("Pre-Season Testing") &&
+                        !dto.getMeetingOfficialName().equalsIgnoreCase("CALLED OFF"))
                 .map(this::mapToMeetingEntity)
                 .toList();
 
@@ -227,14 +226,14 @@ public class SyncService {
         return meetings;
     }
 
-    @Transactional
-    public void syncMeetingsByYear(short year){
-        try {
-            meetingRepository.saveAll(getMeetings(year));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    @Transactional
+//    public void syncMeetingsByYear(short year){
+//        try {
+//            meetingRepository.saveAll(getMeetings(year));
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     //***************
     // SESSION RESULTS
@@ -255,11 +254,7 @@ public class SyncService {
             log.info("Added " + i + " new sessions");
         }
     }
-    @Transactional
-    public void test22(){
-        Session s = sessionRepository.findAll().getFirst();
-        syncResultsOfSession(s);
-    }
+
     //***************
     // DRIVERS
     //***************
@@ -295,18 +290,18 @@ public class SyncService {
     }
 
     // returns sessions list based on year
-    public List<Session> getSessionsOfMeeting(Meeting meeting){
-        return sessionRepository.findByMeetingKey(meeting);
-    }
-    @Transactional
-    public void syncSessionsOfMeeting(Meeting meeting){
-        List<SessionDTO> sessionDTOS = sessionClient.getSessionsByKey(meeting.getId());
-        List<Session> sessions = sessionDTOS.stream()
-                .filter(this::isSessionAccepted)
-                .map(this::mapToSessionEntity)
-                .toList();
-        sessionRepository.saveAll(sessions);
-    }
+//    public List<Session> getSessionsOfMeeting(Meeting meeting){
+//        return sessionRepository.findByMeetingKey(meeting);
+//    }
+//    @Transactional
+//    public void syncSessionsOfMeeting(Meeting meeting){
+//        List<SessionDTO> sessionDTOS = sessionClient.getSessionsByKey(meeting.getId());
+//        List<Session> sessions = sessionDTOS.stream()
+//                .filter(this::isSessionAccepted)
+//                .map(this::mapToSessionEntity)
+//                .toList();
+//        sessionRepository.saveAll(sessions);
+//    }
 
     //***************
     // STINTS
@@ -341,7 +336,7 @@ public class SyncService {
         entity.setCircuitShortName(dto.getCircuitShortName());
         entity.setDateStart(dto.getDateStart());
         entity.setDateEnd(dto.getDateEnd());
-        entity.setYear((short) dto.getYear());
+        entity.setYear(dto.getYear());
         return entity;
     }
 

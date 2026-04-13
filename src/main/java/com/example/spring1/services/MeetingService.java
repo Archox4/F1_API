@@ -1,14 +1,13 @@
 package com.example.spring1.services;
 
+
 import com.example.spring1.repositories.MeetingRepository;
 import com.example.spring1.entities.Meeting;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -30,6 +29,7 @@ public class MeetingService {
         return meetingRepository.findById(meeting_key)
                 .orElseThrow(() -> new RuntimeException("Race not found with id: " + meeting_key));
     }
+
 
     @GetMapping("/year/{year}")
     public List<Meeting> getRacesByYear(@PathVariable short year){
