@@ -19,5 +19,5 @@
 #### Driver:
 ##### Base /api/drivers
 - /{session_key} - returns drivers for session
-### No security, rate limiting, etc. for now. Creds in .properties
+
 
