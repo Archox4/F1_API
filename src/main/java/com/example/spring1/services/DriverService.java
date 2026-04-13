@@ -32,8 +32,4 @@ public class DriverService {
         return  driverRepository.findDriversBySessionKeyId(session_key);
     }
 
-//    @GetMapping("/{race_id}")
-//    public List<Session> getSessionsByRaceId(@PathVariable int race_id){
-//        return  sessionRepository.findByRaceId(race_id);
-//    }
 }
