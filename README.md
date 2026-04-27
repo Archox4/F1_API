@@ -8,7 +8,7 @@
 ##### Base /api/sessions
 - /detailed/{session_key} - returns detailed data for session (session + meeting data)
 #### Meeting:
-##### Base /api/meeting
+##### Base /api/meetings
 - /{meeting_key} - returns data for meeting
 - /year/{year} - returns meetings of year/season
 #### Lap:
@@ -19,5 +19,5 @@
 #### Driver:
 ##### Base /api/drivers
 - /{session_key} - returns drivers for session
-### No security, rate limiting, etc. for now. Creds in .properties
+
 
