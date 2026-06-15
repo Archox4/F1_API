@@ -1,4 +1,4 @@
-## Java Spring Boot application. (not finished)
+## Java Spring Boot application.
 ### Educational project. Takes data from [Open F1](https://openf1.org/docs/), saves in db, has its own REST API. Used for my other project F1_react.
 ### Endpoints:
 #### Sync:
