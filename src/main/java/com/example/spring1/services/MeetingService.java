@@ -5,10 +5,13 @@ import com.example.spring1.repositories.MeetingRepository;
 import com.example.spring1.entities.Meeting;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -18,36 +21,38 @@ public class MeetingService {
 
     private final MeetingRepository meetingRepository;
 
-    @GetMapping
-    public List<Meeting> getAllRaces(){
-        return meetingRepository.findAll();
+    @GetMapping("/")
+    public ResponseEntity<?> getAllRaces(){
+        List<Meeting> meetings = meetingRepository.findAll();
+        if (meetings.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No meetings found");
+        }
+        return ResponseEntity.ok(meetings);
     }
 
     @GetMapping("/{meeting_key}")
-    public Meeting getRaceById(@PathVariable int meeting_key) {
-        return meetingRepository.findById(meeting_key)
-                .orElseThrow(() -> new RuntimeException("Race not found with id: " + meeting_key));
+    public ResponseEntity<?> getRaceById(@PathVariable int meeting_key) {
+        Optional<Meeting> meeting = meetingRepository.findById(meeting_key);
+        if (meeting.isPresent()) {
+            return ResponseEntity.ok(meeting.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No race found with meeting key: " + meeting_key);
+        }
     }
 
 
     @GetMapping("/year/{year}")
-    public List<Meeting> getRacesByYear(@PathVariable short year){
-        LocalDate date = LocalDate.now();
-        if(year < 2023 || year > date.getYear()) return null;
-        try {
-            List<Meeting> raw_meetings = meetingRepository.findByYear(year);
-            List<Meeting> meetings = raw_meetings.stream()
+    public ResponseEntity<?> getRacesByYear(@PathVariable short year){
+        if(year < 2023 || year > 2025) return null;
+        List<Meeting> raw_meetings = meetingRepository.findByYear(year);
+        List<Meeting> filtered_meetings = raw_meetings.stream()
                     .filter(meeting -> meeting.getDateStart().isBefore(OffsetDateTime.now()))
                     .toList();
-            if(!meetings.isEmpty()){
-                return meetings;
-            }
-            else {
-                return null;
-            }
-        } catch (Exception e){
-            log.error("Error: {}", String.valueOf(e));
+
+        if (filtered_meetings.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No races found for year: " + year);
         }
-        return null;
+
+        return ResponseEntity.ok(filtered_meetings);
     }
 }

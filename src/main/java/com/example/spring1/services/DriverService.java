@@ -7,6 +7,7 @@ import com.example.spring1.repositories.DriverRepository;
 import com.example.spring1.repositories.SessionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,11 +26,12 @@ public class DriverService {
     private final SessionRepository sessionRepository;
 
     @GetMapping("/{session_key}")
-    public List<TableProjections.DriverProjection> getDriverBySessionKey(@PathVariable short session_key, SessionStatus sessionStatus){
+    public ResponseEntity<List<TableProjections.DriverProjection>> getDriverBySessionKey(@PathVariable short session_key, SessionStatus sessionStatus){
         if(sessionRepository.findSessionById(session_key).isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Session not found");
+            return ResponseEntity.notFound().build();
         }
-        return  driverRepository.findDriversBySessionKeyId(session_key);
+        List<TableProjections.DriverProjection> data = driverRepository.findDriversBySessionKeyId(session_key);
+        return ResponseEntity.ok(data);
     }
 
 }
