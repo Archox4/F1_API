@@ -29,10 +29,10 @@ public class LapService {
     private final DriverRepository driverRepository;
 
     @GetMapping("/session_key={sessionKey}&driver_number={driverNumber}")
-    public ResponseEntity<List<TableProjections.LapProjection>> getDriverBySessionKey(@PathVariable short sessionKey, @PathVariable Short driverNumber){
+    public ResponseEntity<?> getDriverBySessionKey(@PathVariable short sessionKey, @PathVariable Short driverNumber){
         if(lapRepository.findLapBySessionKeyIdAndDriverNumber(sessionKey, driverNumber).isEmpty()){
-            //throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Laps not found");
-            return ResponseEntity.notFound().build();
+//            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(404).body("NO laps found for driver: " + driverNumber + " of session: " + sessionKey);
         }
         return  ResponseEntity.ok(lapRepository.findLapBySessionKeyIdAndDriverNumber(sessionKey, driverNumber));
     }
