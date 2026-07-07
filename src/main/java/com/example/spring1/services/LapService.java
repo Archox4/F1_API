@@ -1,7 +1,6 @@
 package com.example.spring1.services;
 
 import com.example.spring1.entities.Driver;
-import com.example.spring1.projections.TableProjections;
 import com.example.spring1.repositories.DriverRepository;
 import com.example.spring1.repositories.LapRepository;
 import com.example.spring1.util.DetailedLap;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -31,8 +29,7 @@ public class LapService {
     @GetMapping("/session_key={sessionKey}&driver_number={driverNumber}")
     public ResponseEntity<?> getDriverBySessionKey(@PathVariable short sessionKey, @PathVariable Short driverNumber){
         if(lapRepository.findLapBySessionKeyIdAndDriverNumber(sessionKey, driverNumber).isEmpty()){
-//            return ResponseEntity.notFound().build();
-            return ResponseEntity.status(404).body("NO laps found for driver: " + driverNumber + " of session: " + sessionKey);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("NO laps found for driver: " + driverNumber + " of session: " + sessionKey);
         }
         return  ResponseEntity.ok(lapRepository.findLapBySessionKeyIdAndDriverNumber(sessionKey, driverNumber));
     }
@@ -48,9 +45,8 @@ public class LapService {
         List<Object> allDriversData = new ArrayList<>();
 
         if (drivers.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "no data for session"));
-        };
-
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No data for session");
+        }
         for (Driver driver: drivers){
             ResponseEntity<?> response = getLapsDataForSessionAndDriver(sessionKey, driver.getDriverNumber());
             if(response.getStatusCode() != HttpStatus.NOT_FOUND){
@@ -66,9 +62,8 @@ public class LapService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Laps not found");
         }
         List<DetailedLap> flatLaps = lapRepository.findCombinedData(sessionKey, driverNumber);
-        if (flatLaps.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "no data"));;
-
-        DetailedLap first = flatLaps.get(0);
+        if (flatLaps.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No data");
+        DetailedLap first = flatLaps.getFirst();
         DetailedLapResponse response = new DetailedLapResponse();
         response.setDriverNumber(first.getDriverNumber());
         response.setFullName(first.getFullName());

@@ -18,6 +18,8 @@ import java.io.IOException;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class RateLimitFilter extends OncePerRequestFilter {
 
+    private static final String RATE_LIMIT_KEY_PREFIX = "rate-limit:";
+
     private final RateLimitService rateLimitService;
 
     public RateLimitFilter(RateLimitService rateLimitService) {
@@ -31,8 +33,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
 
         if (path.startsWith("/api/")) {
-            String clientIp = request.getRemoteAddr();
-            Bucket bucket = rateLimitService.resolveBucket(clientIp);
+            Bucket bucket = rateLimitService.resolveBucket(buildRateLimitKey(request));
 
             ConsumptionProbe probe = bucket.tryConsumeAndReturnRemaining(1);
             if (probe.isConsumed()) {
@@ -48,5 +49,9 @@ public class RateLimitFilter extends OncePerRequestFilter {
         } else {
             filterChain.doFilter(request, response);
         }
+    }
+
+    private String buildRateLimitKey(HttpServletRequest request) {
+        return RATE_LIMIT_KEY_PREFIX + request.getRemoteAddr().replace(':', '_');
     }
 }
